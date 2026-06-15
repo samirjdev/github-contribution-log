@@ -3,7 +3,7 @@
 **Contribution Number:** 1
 **Student:** [Samir J] 
 **Issue:** [https://github.com/pwndbg/pwndbg/issues/179]  
-**Status:** [Phase I] [Complete]
+**Status:** [Phase II] [Complete]
 
 ---
 
@@ -19,19 +19,19 @@ What I most want to learn is the layer beneath the exploitation I already know h
 
 ### Problem Description
 
-[In your own words, what's broken or missing?]
+[Pwndbg can already inspect heap chunks, memory mappings, symbols, and raw pointers, but it does not currently connect those pieces into a higher-level “heap object typing” feature.]
 
 ### Expected Behavior
 
-[What should happen?]
+[Pwndbg should provide a command or option that scans heap allocations and reports likely C++ objects. For each candidate object, it should show information such as heap chunk address, user data address, allocation size, and candidate vptr value]
 
 ### Current Behavior
 
-[What actually happens?]
+[Current Pwndbg heap commands can show allocated chunks and raw memory, but they do not automatically infer object types from vtables. With a simple C++ program that allocates virtual objects on the heap, I can manually see that the first word of the object points into a read-only mapping and that the table entries point into executable code.]
 
 ### Affected Components
 
-[Which parts of the codebase are involved?]
+[pwndbg/commands/ptmalloc2.py — existing heap commands such as heap, malloc_chunk, and related output, pwndbg/aglib/heap/ptmalloc.py — heap/chunk abstractions used to walk ptmalloc allocations, pwndbg/aglib/vmmap.py — memory mapping lookup, needed to decide whether a pointer lands in heap, read-only data, or executable memory, pwndbg/aglib/memory.py — safe memory reads from inferior memory, pwndbg/aglib/symbol.py or debugger symbol helpers — resolving vtable/type symbols when present]
 
 ---
 
@@ -39,13 +39,13 @@ What I most want to learn is the layer beneath the exploitation I already know h
 
 ### Environment Setup
 
-[Notes on setting up your local development environment - challenges you faced, how you solved them]
+[I set up Pwndbg from source so I could test the current behavior and later modify the command implementation.]
 
 ### Steps to Reproduce
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
+1. [git clone https://github.com/samirjdev/pwndbg.git && cd pwndbg && git remote add upstream https://github.com/pwndbg/pwndbg.git && git fetch upstream]
+2. [git checkout dev && git pull upstream dev]
+3. [./setup.sh]
 
 ### Reproduction Evidence
 
